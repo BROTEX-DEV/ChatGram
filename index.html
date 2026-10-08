@@ -57,7 +57,7 @@
   </div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود ادمین</label><input id="staffCode" placeholder="کد اختصاصی ادمین"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز ادمین"></div><button class="btn primary" onclick="loginStaff()">ورود ادمین</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.58</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.59</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -133,7 +133,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.54</div>
+  <div class="version">v0.5.59</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video><div id="groupVideoGrid" class="groupVideoGrid hidden"></div></div><div id="callMembers" class="callMembers hidden"></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
@@ -201,7 +201,7 @@ async function registerStudent(){
     token=d.token;profile=d.profile;localStorage.setItem("chatgram_token",token);openApp();
   }catch(e){busy(e.message)}
 }
-function loginStaff(){
+async function loginStaff(){
   const code=$("staffCode").value.trim(),pass=$("staffPass").value;
   if(!code||!pass)return busy("کد ورود و رمز عبور را وارد کنید.");
   busy("در حال ورود...");
