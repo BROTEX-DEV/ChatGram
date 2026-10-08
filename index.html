@@ -39,7 +39,7 @@
   <div class="tabs"><button id="studentTab" class="active" onclick="setMode('student')">کاربر</button><button id="staffTab" onclick="setMode('staff')">ادمین</button></div>
   <div id="studentForm">
     <div id="studentLoginForm">
-      <div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div>
+      <div class="field"><label>شماره تلفن</label><input id="nationalId" type="tel" inputmode="tel" maxlength="14" placeholder="مثلا 09123456789"></div>
       <div class="field"><label>رمز عبور <span class="muted">(برای حساب های ساخته شده)</span></label><input id="studentPass" type="password" placeholder="رمز عبور"></div>
       <button class="btn primary" onclick="loginStudent()">ورود به ChatGram</button>
       <button class="btn" type="button" onclick="toggleStudentAuth(true)">✨ ساخت حساب جدید</button>
@@ -48,6 +48,7 @@
       <div class="notice">حساب کاربری خود را بسازید و بعد از ثبت نام وارد ChatGram شوید.</div>
       <div class="field"><label>نام و نام خانوادگی</label><input id="registerName" maxlength="100" placeholder="مثلا محمدمهدی اکبری"></div>
       <div class="field"><label>کلاس</label><input id="registerClass" maxlength="50" placeholder="مثلا ۸/۲"></div>
+      <div class="field"><label>شماره تلفن</label><input id="registerPhone" type="tel" inputmode="tel" maxlength="14" placeholder="مثلا 09123456789"></div>
       <div class="field"><label>کد ملی</label><input id="registerNationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی ۱۰ رقمی"></div>
       <div class="field"><label>رمز عبور</label><input id="registerPass" type="password" maxlength="100" placeholder="حداقل ۶ کاراکتر"></div>
       <div class="field"><label>تکرار رمز عبور</label><input id="registerPass2" type="password" maxlength="100" placeholder="رمز عبور را دوباره وارد کنید"></div>
@@ -57,7 +58,7 @@
   </div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود ادمین</label><input id="staffCode" placeholder="کد اختصاصی ادمین"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز ادمین"></div><button class="btn primary" onclick="loginStaff()">ورود ادمین</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.56</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.57</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -172,27 +173,35 @@ function toggleStudentAuth(register){
   $("error").textContent="";
 }
 function busy(text){$("error").textContent=text}
+function normalizePhone(value){
+  let p=String(value||"").trim().replace(/[\s()-]/g,"").replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776)).replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632));
+  if(/^\+98\d{10}$/.test(p))p="0"+p.slice(3);
+  if(/^98\d{10}$/.test(p))p="0"+p.slice(2);
+  return /^09\d{9}$/.test(p)?p:"";
+}
 async function loginStudent(){
-  const rawId=$("nationalId").value.trim(); const id=rawId.replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776)).replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632)); if(!/^\d{10}$/.test(id)) return busy("کد ملی باید ۱۰ رقم باشد.");
+  const phone=normalizePhone($("nationalId").value); if(!phone) return busy("شماره تلفن را به شکل 09123456789 وارد کنید.");
   const password=$("studentPass").value;
   busy("در حال ورود...");
-  try{const d=await api("login",{type:"student",national_id:id,password}); token=d.token;profile=d.profile;localStorage.setItem("chatgram_token",token);openApp()}catch(e){busy(e.message)}
+  try{const d=await api("login",{type:"student",phone_number:phone,password}); token=d.token;profile=d.profile;localStorage.setItem("chatgram_token",token);openApp()}catch(e){busy(e.message)}
 }
 async function registerStudent(){
   const name=$("registerName").value.trim();
   const className=$("registerClass").value.trim();
+  const phone=normalizePhone($("registerPhone").value);
   const rawId=$("registerNationalId").value.trim();
   const id=rawId.replace(/[۰-۹]/g,d=>String(d.charCodeAt(0)-1776)).replace(/[٠-٩]/g,d=>String(d.charCodeAt(0)-1632));
   const password=$("registerPass").value;
   const password2=$("registerPass2").value;
   if(name.length<2)return busy("نام و نام خانوادگی را وارد کنید.");
   if(!className)return busy("کلاس را وارد کنید.");
+  if(!phone)return busy("شماره تلفن را به شکل 09123456789 وارد کنید.");
   if(!/^\d{10}$/.test(id))return busy("کد ملی باید ۱۰ رقم باشد.");
   if(password.length<6)return busy("رمز عبور باید حداقل ۶ کاراکتر باشد.");
   if(password!==password2)return busy("تکرار رمز عبور با رمز اصلی یکسان نیست.");
   busy("در حال ساخت حساب...");
   try{
-    const d=await api("register_student",{national_id:id,full_name:name,class_name:className,password});
+    const d=await api("register_student",{phone_number:phone,national_id:id,full_name:name,class_name:className,password});
     token=d.token;profile=d.profile;localStorage.setItem("chatgram_token",token);openApp();
   }catch(e){busy(e.message)}
 }
