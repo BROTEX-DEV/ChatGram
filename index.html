@@ -36,7 +36,7 @@
 <div class="wrap">
 <section id="login" class="card login">
   <div class="brand"><div class="logo"><img src="chatgram-logo.svg" alt="لوگوی ChatGram"></div><h1>ChatGram</h1><p class="muted">پیام رسان مدرسه</p></div>
-  <div class="tabs"><button id="studentTab" class="active" onclick="setMode('student')">دانش آموز</button><button id="staffTab" onclick="setMode('staff')">مسئولین</button></div>
+  <div class="tabs"><button id="studentTab" class="active" onclick="setMode('student')">کاربر</button><button id="staffTab" onclick="setMode('staff')">ادمین</button></div>
   <div id="studentForm">
     <div id="studentLoginForm">
       <div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div>
@@ -45,7 +45,7 @@
       <button class="btn" type="button" onclick="toggleStudentAuth(true)">✨ ساخت حساب جدید</button>
     </div>
     <div id="studentRegisterForm" class="hidden">
-      <div class="notice">حساب دانش آموزی خود را بسازید و بعد از ثبت نام وارد ChatGram شوید.</div>
+      <div class="notice">حساب کاربری خود را بسازید و بعد از ثبت نام وارد ChatGram شوید.</div>
       <div class="field"><label>نام و نام خانوادگی</label><input id="registerName" maxlength="100" placeholder="مثلا محمدمهدی اکبری"></div>
       <div class="field"><label>کلاس</label><input id="registerClass" maxlength="50" placeholder="مثلا ۸/۲"></div>
       <div class="field"><label>کد ملی</label><input id="registerNationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی ۱۰ رقمی"></div>
@@ -55,9 +55,9 @@
       <button class="btn" type="button" onclick="toggleStudentAuth(false)">‹ بازگشت به ورود</button>
     </div>
   </div>
-  <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
+  <div id="staffForm" class="hidden"><div class="field"><label>کد ورود ادمین</label><input id="staffCode" placeholder="کد اختصاصی ادمین"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز ادمین"></div><button class="btn primary" onclick="loginStaff()">ورود ادمین</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.55</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.56</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
@@ -106,7 +106,7 @@
     <h3>پنل مدیریت</h3>
     <div class="adminGrid">
       <div>
-        <h4>کنترل دانش آموزان</h4>
+        <h4>کنترل کاربران</h4>
         <div id="studentList" class="list"></div>
       </div>
       <div>
@@ -119,10 +119,10 @@
       <div class="field"><input id="newGroupName" placeholder="نام گروه جدید"></div>
       <button class="btn primary" onclick="createGroup()">ساخت گروه</button>
       <div class="field"><label>انتخاب گروه</label><select id="manageGroupSelect" onchange="loadGroupMembers()"></select></div>
-      <div class="field"><label>دانش آموز</label><select id="manageStudentSelect"></select></div>
+      <div class="field"><label>کاربر</label><select id="manageStudentSelect"></select></div>
       <div class="row"><button class="btn" onclick="changeGroupMember(true)">افزودن به گروه</button><button class="btn" onclick="changeGroupMember(false)">حذف از گروه</button></div>
-      <button class="btn primary" type="button" onclick="addAllStudentsToGroup()">➕ افزودن همه دانش آموزان</button>
-      <button class="btn primary" type="button" onclick="addAllStaffToGroup()">👥 افزودن همه مسئولین</button>
+      <button class="btn primary" type="button" onclick="addAllStudentsToGroup()">➕ افزودن همه کاربران</button>
+      <button class="btn primary" type="button" onclick="addAllStaffToGroup()">👥 افزودن همه ادمین</button>
       <button class="btn" type="button" onclick="deleteSelectedGroup()">🗑️ حذف گروه</button>
       <div id="groupMemberStatus" class="status muted"></div>
     </div>
@@ -216,7 +216,7 @@ function openApp(){
   $("login").style.display="none";
   $("app").style.display="block";
   $("who").textContent=profile.name+(profile.className?" | "+profile.className:"");
-  $("roleNotice").textContent=profile.type==="staff"?"ورود مسئول فعال است.":"دانش آموز | وضعیت ارسال: "+(profile.canWrite?"فعال":"بسته");
+  $("roleNotice").textContent=profile.type==="staff"?"ورود ادمین فعال است.":"کاربر | وضعیت ارسال: "+(profile.canWrite?"فعال":"بسته");
   $("adminBtn").classList.toggle("hidden",profile.type!=="staff");
   setProfileAvatar();
   showChat();refreshAll();
@@ -310,11 +310,11 @@ function showChat(){adminPanel.style.display="none";showChatList()}
 function getTargetOptions(){
   const options=[];
   if(profile?.type==="student"){
-    staff.forEach(x=>options.push({value:"staff:"+x.id,label:"👤 مسئول: "+x.full_name,kind:"staff",id:x.id}));
+    staff.forEach(x=>options.push({value:"staff:"+x.id,label:"👤 ادمین: "+x.full_name,kind:"staff",id:x.id}));
     groups.forEach(x=>options.push({value:"group:"+x.id,label:"👥 گروه: "+x.name,kind:"group",id:x.id}));
   }else{
-    students.forEach(x=>options.push({value:"student:"+x.id,label:"🎓 دانش آموز: "+x.full_name,kind:"student",id:x.id}));
-    staff.forEach(x=>options.push({value:"staff:"+x.id,label:"👤 مسئول: "+x.full_name,kind:"staff",id:x.id}));
+    students.forEach(x=>options.push({value:"student:"+x.id,label:"🎓 کاربر: "+x.full_name,kind:"student",id:x.id}));
+    staff.forEach(x=>options.push({value:"staff:"+x.id,label:"👤 ادمین: "+x.full_name,kind:"staff",id:x.id}));
     groups.forEach(x=>options.push({value:"group:"+x.id,label:"👥 گروه: "+x.name,kind:"group",id:x.id}));
   }
   return options;
@@ -356,10 +356,10 @@ function chatMeta(key){
   }
   if(kind==="student"){
     const x=students.find(x=>x.id===id);
-    return {kind,id,name:x?.full_name||"دانش آموز",icon:"🎓",avatarUrl:x?.avatar_url||""};
+    return {kind,id,name:x?.full_name||"کاربر",icon:"🎓",avatarUrl:x?.avatar_url||""};
   }
   const x=staff.find(x=>x.id===id);
-  return {kind,id,name:x?.full_name||"مسئول",icon:"👤",avatarUrl:x?.avatar_url||""};
+  return {kind,id,name:x?.full_name||"ادمین",icon:"👤",avatarUrl:x?.avatar_url||""};
 }
 function faNum(n){return String(n??0).replace(/\d/g,d=>"۰۱۲۳۴۵۶۷۸۹"[Number(d)])}
 function formatChatTime(date){
@@ -571,37 +571,37 @@ async function loadGroupMembers(){
   try{
     const d=await api("group_members",{group_id:groupId});
     const sid=document.getElementById("manageStudentSelect").value;
-    groupMemberStatus.textContent=(d.student_ids||[]).includes(sid)?"این دانش آموز عضو گروه است.":"این دانش آموز عضو گروه نیست.";
+    groupMemberStatus.textContent=(d.student_ids||[]).includes(sid)?"این کاربر عضو گروه است.":"این کاربر عضو گروه نیست.";
   }catch(e){groupMemberStatus.textContent=e.message}
 }
 async function changeGroupMember(member){
   const groupId=document.getElementById("manageGroupSelect").value;
   const studentId=document.getElementById("manageStudentSelect").value;
-  if(!groupId||!studentId)return alert("گروه و دانش آموز را انتخاب کنید.");
+  if(!groupId||!studentId)return alert("گروه و کاربر را انتخاب کنید.");
   try{await api("set_group_member",{group_id:groupId,student_id:studentId,member});await loadGroupMembers()}catch(e){alert(e.message)}
 }
 async function addAllStudentsToGroup(){
   const groupId=document.getElementById("manageGroupSelect").value;
   if(!groupId)return alert("ابتدا یک گروه را انتخاب کنید.");
-  if(!students.length)return alert("دانش آموزی ثبت نشده است.");
-  if(!confirm("همه دانش آموزان فعال به این گروه اضافه شوند؟"))return;
+  if(!students.length)return alert("کاربری ثبت نشده است.");
+  if(!confirm("همه کاربران فعال به این گروه اضافه شوند؟"))return;
   try{
     for(const student of students){
       await api("set_group_member",{group_id:groupId,student_id:student.id,member:true});
     }
     await refreshAll();
-    alert("همه دانش آموزان به گروه اضافه شدند.");
+    alert("همه کاربران به گروه اضافه شدند.");
   }catch(e){alert(e.message)}
 }
 async function addAllStaffToGroup(){
   const groupId=document.getElementById("manageGroupSelect").value;
   if(!groupId)return alert("ابتدا یک گروه را انتخاب کنید.");
-  if(!staff.length)return alert("مسئول فعالی ثبت نشده است.");
-  if(!confirm("همه مسئولین فعال عضو این گروه شوند؟"))return;
+  if(!staff.length)return alert("ادمین فعالی ثبت نشده است.");
+  if(!confirm("همه ادمین فعال عضو این گروه شوند؟"))return;
   try{
     const d=await api("add_all_staff_to_group",{group_id:groupId});
     await refreshAll();
-    alert(d.message||"همه مسئولین به گروه اضافه شدند.");
+    alert(d.message||"همه ادمین به گروه اضافه شدند.");
   }catch(e){alert(e.message)}
 }
 async function deleteSelectedGroup(){
@@ -682,7 +682,7 @@ function renderMessages(){renderChatList();updateUnreadIndicator();processIncomi
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 let callPollTimer=null,callStartedAt=0,activeCall=null,callPeer=null,callLocalStream=null,callMuted=false,callCameraOff=false,callIceSeen=new Set(),callJoiningFromLink=false,screenShareStream=null,screenSharing=false;
 let groupCall=null,groupCallPollTimer=null,groupLocalStream=null,groupPeers=new Map(),groupIceSeen=new Set(),groupCandidateQueues=new Map(),groupCallJoining=false,groupAudioEls=new Map(),groupVideoEls=new Map();
-function callPeerMeta(ref){const a=ref?.type==="student"?students.find(x=>x.id===ref.id):staff.find(x=>x.id===ref.id);return {name:a?.full_name||(ref?.type==="student"?"دانش آموز":"مسئول"),avatarUrl:a?.avatar_url||null};}
+function callPeerMeta(ref){const a=ref?.type==="student"?students.find(x=>x.id===ref.id):staff.find(x=>x.id===ref.id);return {name:a?.full_name||(ref?.type==="student"?"کاربر":"ادمین"),avatarUrl:a?.avatar_url||null};}
 function updateCallButton(){const b=document.getElementById("callBtn");if(!b)return;const m=selectedChat?chatMeta(selectedChat):null;b.classList.toggle("hidden",!(profile&&m&&m.id));b.title=m?.kind==="group"?"تماس صوتی گروهی":"تماس صوتی";}
 function callUi(show){document.getElementById("callOverlay")?.classList.toggle("show",show);}
 function callAvatar(m){const e=document.getElementById("callAvatar");if(e)e.innerHTML=m?.avatarUrl?'<img src="'+escapeHtml(m.avatarUrl)+'" alt="">':escapeHtml((m?.name||"؟").slice(0,1));}
@@ -696,7 +696,7 @@ async function prepareCallPeer(){if(!navigator.mediaDevices?.getUserMedia||!wind
 async function pollActiveCall(){if(!activeCall||!profile)return;try{const d=await api("call_poll",{call_id:activeCall.id});const call=(d.calls||[])[0];for(const item of(d.ice||[])){if(callIceSeen.has(item.id))continue;callIceSeen.add(item.id);if(item.sender_id===profile.id)continue;if(callPeer?.remoteDescription)await callPeer.addIceCandidate(item.candidate).catch(()=>{})}if(!call)return;if(activeCall.role==="caller"&&call.answer&&!callPeer?.currentRemoteDescription){await callPeer.setRemoteDescription(call.answer).catch(()=>{});document.getElementById("callState").textContent="در حال اتصال..."}if(call.status==="accepted"){document.getElementById("callState").textContent="در حال اتصال...";document.getElementById("callMuteBtn")?.classList.remove("hidden")}if(call.status==="rejected"||call.status==="ended")finishCallUi(false)}catch{}}
 function startCallPolling(){if(callPollTimer)clearInterval(callPollTimer);callPollTimer=setInterval(pollActiveCall,900);pollActiveCall();}
 function startCall(){if(selectedChat&&chatMeta(selectedChat)?.kind==="group")return startGroupVoiceCall();return startVoiceCall();}
-function groupCallMemberLabel(type,id){const a=type==="student"?students.find(x=>x.id===id):staff.find(x=>x.id===id);return a?.full_name||(type==="student"?"دانش آموز":"مسئول");}
+function groupCallMemberLabel(type,id){const a=type==="student"?students.find(x=>x.id===id):staff.find(x=>x.id===id);return a?.full_name||(type==="student"?"کاربر":"ادمین");}
 function groupPeerIsA(p){return p.a_type===profile.type&&p.a_id===profile.id}
 function groupPeerKey(p){return p.id}
 function groupPcConfig(){return {iceServers:[{urls:"stun:stun.l.google.com:19302"},{urls:"stun:stun1.l.google.com:19302"},{urls:"stun:stun.cloudflare.com:3478"}]}}
@@ -856,12 +856,12 @@ async function sendMessage(){
 }
 function toggleAdmin(){adminPanel.style.display=adminPanel.style.display==="none"?"block":"none";if(adminPanel.style.display==="block")renderAdmin()}
 function renderAdmin(){
-  studentList.innerHTML=students.map(s=>'<div class="row"><span>'+escapeHtml(s.full_name)+'<br><small class="muted">'+escapeHtml(s.class_name||"")+'</small></span><button class="btn" onclick="setStudentWrite(\''+s.id+'\','+s.can_write+')">'+(s.can_write?"بستن ارسال":"باز کردن ارسال")+'</button></div>').join("")||'<div class="notice">دانش آموزی ثبت نشده است.</div>';
+  studentList.innerHTML=students.map(s=>'<div class="row"><span>'+escapeHtml(s.full_name)+'<br><small class="muted">'+escapeHtml(s.class_name||"")+'</small></span><button class="btn" onclick="setStudentWrite(\''+s.id+'\','+s.can_write+')">'+(s.can_write?"بستن ارسال":"باز کردن ارسال")+'</button></div>').join("")||'<div class="notice">کاربری ثبت نشده است.</div>';
   groupList.innerHTML=groups.map(g=>'<div class="row"><div style="display:flex;align-items:center;gap:8px;min-width:0"><div class="groupAvatarPreview">'+(g.avatar_url?'<img src="'+escapeHtml(g.avatar_url)+'" alt="">':'👥')+'</div><span>'+escapeHtml(g.name)+'</span></div><div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><input id="groupAvatarInput_'+g.id+'" class="groupAvatarInput" type="file" accept="image/jpeg,image/png,image/webp" onchange="uploadGroupAvatar(\''+g.id+'\',this)"><button class="btn groupAvatarBtn" onclick="document.getElementById(\'groupAvatarInput_'+g.id+'\').click()" type="button">📷 عکس</button><button class="btn" onclick="setGroupWrite(\''+g.id+'\','+g.write_disabled+')">'+(g.write_disabled?"باز کردن گروه":"بستن گروه")+'</button></div></div>').join("")||'<div class="notice">گروهی ثبت نشده است.</div>';
   const gs=document.getElementById("manageGroupSelect");
   const ss=document.getElementById("manageStudentSelect");
   if(gs){gs.innerHTML=groups.map(g=>'<option value="'+g.id+'">'+escapeHtml(g.name)+'</option>').join("")||'<option value="">گروهی نیست</option>';}
-  if(ss){ss.innerHTML=students.map(x=>'<option value="'+x.id+'">'+escapeHtml(x.full_name)+'</option>').join("")||'<option value="">دانش آموزی نیست</option>';}
+  if(ss){ss.innerHTML=students.map(x=>'<option value="'+x.id+'">'+escapeHtml(x.full_name)+'</option>').join("")||'<option value="">کاربری نیست</option>';}
   if(groups.length&&students.length)loadGroupMembers();
   adminMessages.innerHTML=messages.slice(-30).reverse().map(m=>'<div class="row"><span>'+escapeHtml(m.content)+'</span><button class="btn" onclick="deleteMessage(\''+m.id+'\')">حذف</button></div>').join("")||'<div class="notice">پیامی نیست.</div>';
 }
