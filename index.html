@@ -35,18 +35,18 @@
 <body>
 <div class="wrap">
 <section id="login" class="card login">
-  <div class="brand"><div class="logo"><img src="https://raw.githubusercontent.com/BROTEX-DEV/HelliGram/main/logo.png" alt="لوگوی ChatGram"></div><h1>ChatGram</h1><p class="muted">پیام رسان مدرسه</p></div>
+  <div class="brand"><div class="logo"><img src="chatgram-logo.svg" alt="لوگوی ChatGram"></div><h1>ChatGram</h1><p class="muted">پیام رسان مدرسه</p></div>
   <div class="tabs"><button id="studentTab" class="active" onclick="setMode('student')">دانش آموز</button><button id="staffTab" onclick="setMode('staff')">مسئولین</button></div>
   <div id="studentForm"><div class="field"><label>کد ملی</label><input id="nationalId" inputmode="numeric" maxlength="10" placeholder="کد ملی را وارد کنید"></div><button class="btn primary" onclick="loginStudent()">ورود به ChatGram</button></div>
   <div id="staffForm" class="hidden"><div class="field"><label>کد ورود مسئول</label><input id="staffCode" placeholder="کد اختصاصی مسئول"></div><div class="field"><label>رمز عبور</label><input id="staffPass" type="password" placeholder="رمز مسئولین"></div><button class="btn primary" onclick="loginStaff()">ورود مسئول</button></div>
   <div id="error" class="error"></div>
-  <div class="version">v0.5.53</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
+  <div class="version">v0.5.54</div><div class="deployedBy">Deployed By MohammadMahdi Akbari 43</div>
 </section>
 
 <section id="app" class="app">
   <div class="appHeader">
     <button class="iconBtn" onclick="toggleMenu()" aria-label="منو">☰</button>
-    <div class="appBrand"><div class="appLogo"><img src="https://raw.githubusercontent.com/BROTEX-DEV/HelliGram/main/logo.png" alt="ChatGram"></div><div class="appBrandText"><b>ChatGram</b><small id="who"></small></div></div>
+    <div class="appBrand"><div class="appLogo"><img src="chatgram-logo.svg" alt="ChatGram"></div><div class="appBrandText"><b>ChatGram</b><small id="who"></small></div></div>
     
   </div>
   <div id="menuOverlay" class="menuOverlay" onclick="toggleMenu(false)"></div>
@@ -116,7 +116,7 @@
     <h4>پیام های اخیر</h4>
     <div id="adminMessages" class="list"></div>
   </section>
-  <div class="version">v0.5.50</div>
+  <div class="version">v0.5.54</div>
 </section>
 <div id="callOverlay" class="callOverlay"><div class="callCard"><div id="callAvatar" class="callAvatar">👤</div><div id="callName" class="callName">تماس تصویری</div><div id="callState" class="callState">در حال برقراری تماس...</div><div id="videoStage" class="videoStage"><video id="remoteVideo" class="remoteVideo" autoplay playsinline></video><video id="localVideo" class="localVideo" autoplay playsinline muted></video><div id="groupVideoGrid" class="groupVideoGrid hidden"></div></div><div id="callMembers" class="callMembers hidden"></div><div class="callActions"><button id="callAcceptBtn" class="callAction callAccept" type="button" onclick="acceptIncomingCall()">✓</button><button id="callMuteBtn" class="callAction callMute hidden" type="button" onclick="toggleCallMute()">🎙️</button><button id="callCameraBtn" class="callAction callMute hidden" type="button" onclick="toggleCallCamera()">📹</button><button id="callShareBtn" class="callAction callMute hidden" type="button" onclick="toggleScreenShare()" aria-label="اشتراک صفحه">🖥️</button><button id="callRejectBtn" class="callAction callReject" type="button" onclick="rejectOrHangupCall()">✕</button></div><div id="callTimer" class="callTimer"></div><audio id="remoteAudio" autoplay playsinline></audio></div></div>
 </div>
